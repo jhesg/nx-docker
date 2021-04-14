@@ -1,0 +1,99 @@
+{
+  "version": 2,
+  "cli": {
+    "defaultCollection": "@nrwl/next"
+  },
+  "defaultProject": "nx-docker",
+  "generators": {
+    "@nrwl/react": {
+      "application": {
+        "babel": true
+      }
+    },
+    "@nrwl/next": {
+      "application": {
+        "style": "styled-components",
+        "linter": "eslint"
+      }
+    }
+  },
+  "projects": {
+    "nx-docker": {
+      "root": "apps/nx-docker",
+      "sourceRoot": "apps/nx-docker",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/next:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "root": "apps/nx-docker",
+            "outputPath": "dist/apps/nx-docker"
+          },
+          "configurations": {
+            "production": {}
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/next:server",
+          "options": {
+            "buildTarget": "nx-docker:build",
+            "dev": true
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "nx-docker:build:production",
+              "dev": false
+            }
+          }
+        },
+        "export": {
+          "executor": "@nrwl/next:export",
+          "options": {
+            "buildTarget": "nx-docker:build:production"
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/nx-docker"],
+          "options": {
+            "jestConfig": "apps/nx-docker/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/nx-docker/**/*.{ts,tsx,js,jsx}"]
+          }
+        }
+      }
+    },
+    "nx-docker-e2e": {
+      "root": "apps/nx-docker-e2e",
+      "sourceRoot": "apps/nx-docker-e2e/src",
+      "projectType": "application",
+      "targets": {
+        "e2e": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/nx-docker-e2e/cypress.json",
+            "tsConfig": "apps/nx-docker-e2e/tsconfig.e2e.json",
+            "devServerTarget": "nx-docker:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "nx-docker:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/nx-docker-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    }
+  }
+}
